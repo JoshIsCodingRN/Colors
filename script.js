@@ -36,17 +36,21 @@ let targetMatches = 0;
 let currentMatchRound = 0;
 let currentLeft = null;
 let currentRight = null;
+let mobileMode = null;
 
 function isMobileDevice() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const mobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
     const coarsePointer = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    const noHover = window.matchMedia && window.matchMedia("(hover: none)").matches;
     const smallViewport = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
-    return mobileUserAgent || (coarsePointer && smallViewport);
+    const touchCapable = navigator.maxTouchPoints > 0;
+    // Prefer input capability checks, with a small-viewport touch fallback.
+    return (coarsePointer && noHover) || (smallViewport && touchCapable);
 }
 
 function applyDeviceMode() {
     const mobile = isMobileDevice();
+    if (mobile === mobileMode) return;
+    mobileMode = mobile;
     document.body.classList.toggle("is-mobile", mobile);
     if (instructionText) {
         instructionText.innerText = mobile ? "Tap the color you prefer." : "Click the color you prefer.";
@@ -417,6 +421,13 @@ startBtn.addEventListener("click", initTournament);
 colorLeft.addEventListener("click", () => handleChoice(currentLeft, currentRight, colorLeft, colorRight));
 colorRight.addEventListener("click", () => handleChoice(currentRight, currentLeft, colorRight, colorLeft));
 restartBtn.addEventListener("click", () => showView(setupView));
-window.addEventListener("resize", applyDeviceMode);
+const RESIZE_DEBOUNCE_MS = 150;
+(() => {
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(applyDeviceMode, RESIZE_DEBOUNCE_MS);
+    });
+})();
 window.addEventListener("orientationchange", applyDeviceMode);
 applyDeviceMode();
