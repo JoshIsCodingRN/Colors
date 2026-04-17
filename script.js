@@ -23,6 +23,7 @@ const currentMatchSpan = document.getElementById("current-match");
 const totalMatchesSpan = document.getElementById("total-matches");
 const progressBarFill = document.getElementById("progress-bar-fill");
 const roundDisplay = document.getElementById("round-display");
+const instructionText = document.querySelector(".instruction");
 
 const leaderboard = document.getElementById("leaderboard");
 const paletteWarm = document.getElementById("palette-warm");
@@ -35,6 +36,22 @@ let targetMatches = 0;
 let currentMatchRound = 0;
 let currentLeft = null;
 let currentRight = null;
+
+function isMobileDevice() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const mobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    const coarsePointer = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    const smallViewport = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+    return mobileUserAgent || (coarsePointer && smallViewport);
+}
+
+function applyDeviceMode() {
+    const mobile = isMobileDevice();
+    document.body.classList.toggle("is-mobile", mobile);
+    if (instructionText) {
+        instructionText.innerText = mobile ? "Tap the color you prefer." : "Click the color you prefer.";
+    }
+}
 
 // HSL to HEX Utility
 // h = [0,360], s = [0,100], l = [0,100]
@@ -400,3 +417,6 @@ startBtn.addEventListener("click", initTournament);
 colorLeft.addEventListener("click", () => handleChoice(currentLeft, currentRight, colorLeft, colorRight));
 colorRight.addEventListener("click", () => handleChoice(currentRight, currentLeft, colorRight, colorLeft));
 restartBtn.addEventListener("click", () => showView(setupView));
+window.addEventListener("resize", applyDeviceMode);
+window.addEventListener("orientationchange", applyDeviceMode);
+applyDeviceMode();
