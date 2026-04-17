@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Tournament Picker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Favorite Color Picker</h1>
+
+        <!-- Setup Screen -->
+        <div id="setup-view" class="view active">
+            <p>Enter how many colors to generate and how many matches you want to judge. We'll rank them on a leaderboard!</p>
+            <div class="input-group">
+                <div class="slider-container">
+                    <label>Colors: <span id="color-count-val">16</span></label>
+                    <input type="range" id="color-count" min="4" max="256" value="16">
+                </div>
+                <div class="slider-container">
+                    <label>Matches: <span id="match-count-val">24</span></label>
+                    <input type="range" id="match-count" min="1" max="500" value="24">
+                </div>
+                <button id="start-btn">Start</button>
+            </div>
+            <p id="error-msg" class="hidden">Please enter valid numbers.</p>
+        </div>
+
+        <!-- Tournament Screen -->
+        <div id="tournament-view" class="view hidden">
+            <div class="progress-container">
+                <h3 id="round-display" class="round-title">Matchup Ranking</h3>
+                <p>Match <span id="current-match">1</span> of <span id="total-matches">X</span></p>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+            
+            <div class="color-options">
+                <div id="color-left" class="color-box">
+                    <div class="paint-swatch" id="swatch-left">
+                        <span id="hex-left" class="hex-label">#FFFFFF</span>
+                    </div>
+                    <div class="paint-details">
+                        <span id="name-left" class="color-name">White</span>
+                    </div>
+                </div>
+                <div class="vs-badge">VS</div>
+                <div id="color-right" class="color-box">
+                    <div class="paint-swatch" id="swatch-right">
+                        <span id="hex-right" class="hex-label">#000000</span>
+                    </div>
+                    <div class="paint-details">
+                        <span id="name-right" class="color-name">Black</span>
+                    </div>
+                </div>
+            </div>
+            <p class="instruction">Click the color you prefer.</p>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-view" class="view hidden">
+            <h2>Leaderboard</h2>
+            <p>Your ultimate favorite colors, ranked by performance!</p>
+            <div id="leaderboard" class="leaderboard-container">
+                <!-- Javascript will populate -->
+            </div>
+            
+            <div class="palette-section">
+                <h3>Winning Color Palettes</h3>
+                <div class="palette-container">
+                    <h4>Simmer (Warm Harmony)</h4>
+                    <div class="palette-row" id="palette-warm"></div>
+                    
+                    <h4>Chill (Cool Harmony)</h4>
+                    <div class="palette-row" id="palette-cool"></div>
+                </div>
+            </div>
+
+            <button id="restart-btn" style="margin-top: 2rem;">Start Over</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
