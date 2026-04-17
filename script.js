@@ -23,6 +23,7 @@ const currentMatchSpan = document.getElementById("current-match");
 const totalMatchesSpan = document.getElementById("total-matches");
 const progressBarFill = document.getElementById("progress-bar-fill");
 const roundDisplay = document.getElementById("round-display");
+const instructionText = document.querySelector(".instruction");
 
 const leaderboard = document.getElementById("leaderboard");
 const paletteWarm = document.getElementById("palette-warm");
@@ -35,6 +36,26 @@ let targetMatches = 0;
 let currentMatchRound = 0;
 let currentLeft = null;
 let currentRight = null;
+let mobileMode = null;
+
+function isMobileDevice() {
+    const coarsePointer = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    const noHover = window.matchMedia && window.matchMedia("(hover: none)").matches;
+    const smallViewport = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+    const touchCapable = navigator.maxTouchPoints > 0;
+    // Prefer input capability checks, with a small-viewport touch fallback.
+    return (coarsePointer && noHover) || (smallViewport && touchCapable);
+}
+
+function applyDeviceMode() {
+    const mobile = isMobileDevice();
+    if (mobile === mobileMode) return;
+    mobileMode = mobile;
+    document.body.classList.toggle("is-mobile", mobile);
+    if (instructionText) {
+        instructionText.innerText = mobile ? "Tap the color you prefer." : "Click the color you prefer.";
+    }
+}
 
 // HSL to HEX Utility
 // h = [0,360], s = [0,100], l = [0,100]
@@ -400,3 +421,13 @@ startBtn.addEventListener("click", initTournament);
 colorLeft.addEventListener("click", () => handleChoice(currentLeft, currentRight, colorLeft, colorRight));
 colorRight.addEventListener("click", () => handleChoice(currentRight, currentLeft, colorRight, colorLeft));
 restartBtn.addEventListener("click", () => showView(setupView));
+const RESIZE_DEBOUNCE_MS = 150;
+(() => {
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(applyDeviceMode, RESIZE_DEBOUNCE_MS);
+    });
+})();
+window.addEventListener("orientationchange", applyDeviceMode);
+applyDeviceMode();

@@ -211,6 +211,42 @@ button:hover {
     color: #666;
 }
 
+body.is-mobile {
+    align-items: flex-start;
+    padding: 12px;
+}
+
+body.is-mobile .container {
+    padding: 20px 14px;
+    max-width: 100%;
+}
+
+body.is-mobile .color-options {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+body.is-mobile .color-box {
+    width: 100%;
+    max-width: 360px;
+    height: 230px;
+}
+
+body.is-mobile .vs-badge {
+    font-size: 20px;
+}
+
+body.is-mobile .leaderboard-item {
+    height: auto;
+    min-height: 50px;
+    flex-wrap: wrap;
+}
+
+body.is-mobile .lb-details {
+    padding: 8px 12px;
+}
+
 /* Result View */
 .leaderboard-container {
     width: 100%;
